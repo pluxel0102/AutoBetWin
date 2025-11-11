@@ -591,7 +591,8 @@
                                             FontWeight="SemiBold"
                                             Foreground="{ThemeResource TextPrimaryBrush}"/>
                                         <TextBlock 
-                                            Text="Версия 1.0.0" 
+                                            x:Name="AppVersionText"
+                                            Text="Версия 1.0.1" 
                                             FontSize="14"
                                             Foreground="{ThemeResource TextSecondaryBrush}"/>
                                     </StackPanel>

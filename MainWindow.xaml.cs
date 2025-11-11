@@ -96,6 +96,9 @@ public sealed partial class MainWindow : Window
         // Запуск таймера автопроверки обновлений (каждый час)
         InitializeUpdateChecker();
         
+        // Устанавливаем текущую версию приложения динамически
+        AppVersionText.Text = $"Версия {UpdateService.GetCurrentVersion()}";
+        
         // Запускаем анимацию с задержкой для корректной отрисовки после максимизации
         DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
         {
