@@ -2,7 +2,7 @@
 ; Download Inno Setup from: https://jrsoftware.org/isdl.php
 
 #define MyAppName "AutoBet"
-#define MyAppVersion "1.0.1"
+#define MyAppVersion "1.0.2"
 #define MyAppPublisher "AutoBet Team"
 #define MyAppExeName "AutoBet.exe"
 #define MyAppSourcePath "C:\Users\User\Desktop\AutoBet.NETWinUI3\bin\x64\Release\net8.0-windows10.0.19041.0\win-x64\publish"

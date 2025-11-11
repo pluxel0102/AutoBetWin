@@ -16,7 +16,7 @@ public static class UpdateService
 {
     private const string GITHUB_REPO_OWNER = "pluxel0102";
     private const string GITHUB_REPO_NAME = "AutoBetWin";
-    private const string CURRENT_VERSION = "1.0.1"; // Текущая версия приложения
+    private const string CURRENT_VERSION = "1.0.2"; // Текущая версия приложения
     
     private static readonly HttpClient _httpClient = new HttpClient
     {

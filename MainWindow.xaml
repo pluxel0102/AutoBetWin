@@ -220,20 +220,6 @@
                             Foreground="{ThemeResource TextSecondaryBrush}"
                             HorizontalAlignment="Center"/>
                         
-                        <!-- Тестовая надпись для проверки обновлений -->
-                        <Border Background="#10B981"
-                               CornerRadius="8"
-                               Padding="16,8"
-                               Margin="0,20,0,0"
-                               HorizontalAlignment="Center">
-                            <TextBlock 
-                                Text="✨ Система автообновлений активна - v1.0.1" 
-                                FontSize="14"
-                                FontWeight="Bold"
-                                Foreground="White"
-                                HorizontalAlignment="Center"/>
-                        </Border>
-                        
                         <!-- Кнопки для MelBet -->
                         <StackPanel x:Name="MelBetButtonsPanel" Visibility="Collapsed" Spacing="16" HorizontalAlignment="Center">
                             <!-- Кнопка запуска МелБет -->
