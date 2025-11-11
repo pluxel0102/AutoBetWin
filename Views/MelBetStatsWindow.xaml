@@ -1,0 +1,221 @@
+<Window
+    x:Class="AutoBet.Views.MelBetStatsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Closed="Window_Closed">
+
+    <Window.SystemBackdrop>
+        <DesktopAcrylicBackdrop/>
+    </Window.SystemBackdrop>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.Resources>
+            <!-- Анимация пульсации для иконки статуса -->
+            <Storyboard x:Name="PulseAnimation" RepeatBehavior="Forever" AutoReverse="True">
+                <DoubleAnimation 
+                    Storyboard.TargetName="StatusIcon"
+                    Storyboard.TargetProperty="Opacity"
+                    From="0.3"
+                    To="1.0"
+                    Duration="0:0:2.5"
+                    EnableDependentAnimation="True">
+                    <DoubleAnimation.EasingFunction>
+                        <SineEase EasingMode="EaseInOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="200"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Кастомный заголовок окна -->
+        <Grid Grid.Row="0"
+              Height="40"
+              Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+              BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+              BorderThickness="0,0,0,1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Область для перетаскивания -->
+            <Grid x:Name="AppTitleBar" 
+                  Grid.Column="0"
+                  Grid.ColumnSpan="2"
+                  Background="Transparent">
+                
+                <!-- Иконка и название окна -->
+                <StackPanel Orientation="Horizontal" 
+                           Spacing="8" 
+                           Margin="16,0,0,0"
+                           VerticalAlignment="Center">
+                    <FontIcon Glyph="&#xE9D9;" 
+                             FontSize="16"
+                             Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                    <TextBlock Text="Статистика МелБет" 
+                              FontSize="13"
+                              FontWeight="SemiBold"
+                              Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                              VerticalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Кнопка закрытия -->
+            <!-- Кнопка закрытия убрана, используются только системные кнопки -->
+        </Grid>
+
+        <!-- Заголовок -->
+        <Border Grid.Row="1" 
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                Padding="20,16"
+                BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+                BorderThickness="0,0,0,1">
+            <StackPanel Spacing="6">
+                <TextBlock Text="Статистика кубиков" 
+                           FontSize="22" 
+                           FontWeight="Bold"
+                           Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+                
+                <!-- Статус с анимированной иконкой -->
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Ellipse x:Name="StatusIcon"
+                             Width="10"
+                             Height="10"
+                             Fill="#4CAF50"
+                             VerticalAlignment="Center"
+                             Opacity="0.3"/>
+                    
+                    <TextBlock x:Name="StatusText" 
+                               Text="Готов к запуску" 
+                               FontSize="13"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Контейнер статистики -->
+        <ScrollViewer Grid.Row="2" 
+                      VerticalScrollBarVisibility="Auto"
+                      Padding="16,12,16,12">
+            <StackPanel x:Name="StatsContainer" Spacing="16"/>
+        </ScrollViewer>
+
+        <!-- Панель логов -->
+        <Border Grid.Row="3"
+                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+                BorderThickness="0,1,0,1"
+                Padding="12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Заголовок с кнопкой копирования -->
+                <Grid Grid.Row="0" Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock Grid.Column="0"
+                               Text="📋 Логи детекции"
+                               FontSize="14"
+                               FontWeight="SemiBold"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               VerticalAlignment="Center"/>
+                    
+                    <Button Grid.Column="1"
+                            x:Name="OpenLogsFolderButton"
+                            Click="OpenLogsFolderButton_Click"
+                            Width="32"
+                            Height="32"
+                            Padding="0"
+                            CornerRadius="6"
+                            Background="Transparent"
+                            BorderThickness="1"
+                            BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                            ToolTipService.ToolTip="Открыть папку с логами"
+                            Margin="0,0,4,0">
+                        <FontIcon Glyph="&#xE8B7;" FontSize="14" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                    </Button>
+                    
+                    <Button Grid.Column="2"
+                            x:Name="CopyLogsButton"
+                            Click="CopyLogsButton_Click"
+                            Width="32"
+                            Height="32"
+                            Padding="0"
+                            CornerRadius="6"
+                            Background="Transparent"
+                            BorderThickness="1"
+                            BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}"
+                            ToolTipService.ToolTip="Скопировать все логи">
+                        <FontIcon Glyph="&#xE8C8;" FontSize="14" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                    </Button>
+                </Grid>
+                
+                <ScrollViewer x:Name="LogScrollViewer"
+                              Grid.Row="1"
+                              VerticalScrollBarVisibility="Auto"
+                              Background="{ThemeResource ControlFillColorDefaultBrush}"
+                              CornerRadius="6">
+                    <TextBox x:Name="LogTextBox"
+                             FontFamily="Consolas"
+                             FontSize="11"
+                             Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             IsReadOnly="True"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             Padding="8"/>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <!-- Кнопки управления -->
+        <Border Grid.Row="4" 
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                Padding="16"
+                BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+                BorderThickness="0,1,0,0">
+            <StackPanel Spacing="8">
+                <!-- Кнопка запуска/остановки -->
+                <Button x:Name="StartStopButton"
+                        Click="StartStopButton_Click"
+                        HorizontalAlignment="Stretch"
+                        Height="48"
+                        CornerRadius="24"
+                        Background="#4CAF50"
+                        BorderThickness="0">
+                    <Button.Resources>
+                        <ResourceDictionary>
+                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#5CBF60"/>
+                            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#449D48"/>
+                        </ResourceDictionary>
+                    </Button.Resources>
+                    <TextBlock x:Name="StartStopText" 
+                               Text="Начать" 
+                               FontSize="15"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"/>
+                </Button>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

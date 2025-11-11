@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="AutoBet.Views.UpdateWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Обновление доступно">
+
+    <Grid Background="{ThemeResource AppBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <Border Grid.Row="0" 
+                Background="{ThemeResource AccentBrush}"
+                Padding="24,20">
+            <StackPanel Spacing="8">
+                <TextBlock Text="🎉 Доступно новое обновление!"
+                          FontSize="20"
+                          FontWeight="Bold"
+                          Foreground="White"/>
+                <TextBlock x:Name="VersionText"
+                          Text="Версия 1.0.0 → 1.1.0"
+                          FontSize="14"
+                          Foreground="White"
+                          Opacity="0.9"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Описание изменений -->
+        <ScrollViewer Grid.Row="1" 
+                     Padding="24"
+                     VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="ContentPanel" Spacing="16">
+                <TextBlock Text="Что нового:"
+                          FontSize="16"
+                          FontWeight="SemiBold"/>
+                
+                <Border Background="{ThemeResource CardBackgroundBrush}"
+                       BorderBrush="{ThemeResource BorderBrush}"
+                       BorderThickness="1"
+                       CornerRadius="8"
+                       Padding="16">
+                    <TextBlock x:Name="ChangelogText"
+                              TextWrapping="Wrap"
+                              FontSize="14"
+                              LineHeight="24"
+                              Text="Загрузка..."/>
+                </Border>
+
+                <!-- Информация о файле -->
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Информация о файле:"
+                              FontSize="14"
+                              FontWeight="SemiBold"
+                              Opacity="0.7"/>
+                    
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE8B7;" FontSize="14" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                        <TextBlock x:Name="FileSizeText" Text="Размер: 0 МБ" FontSize="13"/>
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE787;" FontSize="14" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                        <TextBlock x:Name="ReleaseDateText" Text="Дата выпуска: -" FontSize="13"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Кнопки действий -->
+        <Border Grid.Row="2" 
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+                BorderThickness="0,1,0,0"
+                Padding="24,16">
+            <StackPanel Orientation="Horizontal" 
+                       HorizontalAlignment="Right"
+                       Spacing="12">
+                
+                <Button x:Name="LaterButton"
+                       Content="Позже"
+                       Click="LaterButton_Click"
+                       Padding="24,8"
+                       CornerRadius="6"/>
+                
+                <Button x:Name="DownloadButton"
+                       Content="Скачать обновление"
+                       Click="DownloadButton_Click"
+                       Style="{StaticResource AccentButtonStyle}"
+                       Padding="24,8"
+                       CornerRadius="6">
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="Enter"/>
+                    </Button.KeyboardAccelerators>
+                </Button>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

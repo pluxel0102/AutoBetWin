@@ -1,0 +1,11 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Функции замедления -->
+    <CircleEase x:Key="EaseOut" EasingMode="EaseOut"/>
+    <CubicEase x:Key="EaseInOut" EasingMode="EaseInOut"/>
+    <QuadraticEase x:Key="EaseIn" EasingMode="EaseIn"/>
+    <BackEase x:Key="BackEaseOut" EasingMode="EaseOut" Amplitude="0.3"/>
+
+</ResourceDictionary>
