@@ -494,20 +494,14 @@ public class MelBetController
             
             await Task.Delay(CLICK_DELAY_MS, cancellationToken);
             
-            // 2. Выбираем ставку 20000 (или NoDoubleBetAmount из настроек)
-            int betAmount = Settings.NoDoubleBetAmount;
-            if (_betButtons.ContainsKey(betAmount) && _betButtons[betAmount].HasValue)
+            // 2. Выбираем ставку 200000 (кнопка 20000 после скролла)
+            if (_betButtons.ContainsKey(20000) && _betButtons[20000].HasValue)
             {
-                await ClickArea(_betButtons[betAmount]!.Value, $"Выбор ставки {betAmount}", cancellationToken);
-            }
-            else if (_betButtons.ContainsKey(20000) && _betButtons[20000].HasValue)
-            {
-                // Fallback на 20000 если настройка другая
-                await ClickArea(_betButtons[20000]!.Value, "Выбор ставки 20000", cancellationToken);
+                await ClickArea(_betButtons[20000]!.Value, "Выбор ставки 200000", cancellationToken);
             }
             else
             {
-                Log("⚠️ Кнопка ставки 20000 не найдена");
+                Log("⚠️ Кнопка ставки 200000 (20000) не найдена");
             }
             
             await Task.Delay(BETWEEN_CLICKS_DELAY_MS, cancellationToken);

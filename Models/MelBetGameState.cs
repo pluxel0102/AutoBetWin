@@ -259,10 +259,10 @@ public class MelBetGameState
                 }
             }
             
-            // Если была ставка "Не дубль" - также проиграли
+            // Если была ставка "Не дубль" - также проиграли (всегда 200000)
             if (WasNoDoubleBetPlaced)
             {
-                newState.Balance -= settings.NoDoubleBetAmount;
+                newState.Balance -= 200000;
                 newState.WasNoDoubleBetPlaced = false;
             }
         }

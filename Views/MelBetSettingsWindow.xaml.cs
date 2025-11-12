@@ -212,6 +212,12 @@ namespace AutoBet.Views
                 }
                 
                 System.Diagnostics.Debug.WriteLine($"[MelBetSettingsWindow] Загружена стратегия: {savedStrategy}");
+
+                // Загружаем настройку ставки "Не дубль"
+                bool enableNoDoubleBet = SettingsService.LoadEnableNoDoubleBet();
+                NoDoubleBetToggle.IsOn = enableNoDoubleBet;
+                
+                System.Diagnostics.Debug.WriteLine($"[MelBetSettingsWindow] Загружена настройка 'Не дубль': {enableNoDoubleBet}");
             }
             catch (Exception ex)
             {
@@ -241,6 +247,13 @@ namespace AutoBet.Views
         }
 
         private void StrategyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Перезапускаем таймер при каждом изменении
+            _saveTimer?.Stop();
+            _saveTimer?.Start();
+        }
+
+        private void NoDoubleBetToggle_Toggled(object sender, RoutedEventArgs e)
         {
             // Перезапускаем таймер при каждом изменении
             _saveTimer?.Stop();
@@ -287,6 +300,10 @@ namespace AutoBet.Views
                     SettingsService.SaveMelBetStrategy(strategy);
                     System.Diagnostics.Debug.WriteLine($"[MelBetSettingsWindow] Стратегия сохранена: {strategy}");
                 }
+
+                // Сохраняем настройку "Не дубль"
+                SettingsService.SaveEnableNoDoubleBet(NoDoubleBetToggle.IsOn);
+                System.Diagnostics.Debug.WriteLine($"[MelBetSettingsWindow] Настройка 'Не дубль' сохранена: {NoDoubleBetToggle.IsOn}");
 
                 // Показываем уведомление о сохранении
                 ShowSaveNotification();

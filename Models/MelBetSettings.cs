@@ -34,11 +34,6 @@ public class MelBetSettings
     /// Размещать ставку "Не дубль" после 4 ничьих подряд
     /// </summary>
     public bool EnableNoDoubleBet { get; set; } = true;
-    
-    /// <summary>
-    /// Сумма ставки "Не дубль"
-    /// </summary>
-    public int NoDoubleBetAmount { get; set; } = 200000;
 
     /// <summary>
     /// Количество проигрышей подряд, после которых нужно менять цвет (1-5)
@@ -59,6 +54,9 @@ public class MelBetSettings
         
         // Загружаем стратегию
         Strategy = Services.SettingsService.LoadMelBetStrategy();
+
+        // Загружаем настройки ставки "Не дубль"
+        EnableNoDoubleBet = Services.SettingsService.LoadEnableNoDoubleBet();
     }
     
     /// <summary>
@@ -69,9 +67,6 @@ public class MelBetSettings
     {
         if (BaseBet < 10)
             return (false, "Базовая ставка должна быть не менее 10");
-        
-        if (NoDoubleBetAmount < 10)
-            return (false, "Ставка 'Не дубль' должна быть не менее 10");
         
         return (true, string.Empty);
     }
@@ -88,7 +83,6 @@ public class MelBetSettings
             Strategy = this.Strategy,
             EnableTestMode = this.EnableTestMode,
             EnableNoDoubleBet = this.EnableNoDoubleBet,
-            NoDoubleBetAmount = this.NoDoubleBetAmount,
             ColorSwitchAfterLosses = this.ColorSwitchAfterLosses
         };
     }

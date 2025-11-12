@@ -25,6 +25,7 @@ public static class SettingsService
         public string MelBetPreferredColor { get; set; } = "Blue";
         public int MelBetColorSwitchAfterLosses { get; set; } = 2;
         public string MelBetStrategy { get; set; } = "Martingale";
+        public bool EnableNoDoubleBet { get; set; } = true;
     }
     
     private class ProxyData
@@ -515,5 +516,41 @@ public static class SettingsService
             System.Diagnostics.Debug.WriteLine($"[SettingsService] Ошибка загрузки стратегии МелБет: {ex.Message}");
         }
         return Models.BetStrategy.Martingale; // По умолчанию Мартингейл
+    }
+
+    /// <summary>
+    /// Сохраняет настройку включения ставки "Не дубль"
+    /// </summary>
+    public static void SaveEnableNoDoubleBet(bool enabled)
+    {
+        try
+        {
+            var settings = LoadSettings();
+            settings.EnableNoDoubleBet = enabled;
+            SaveSettings(settings);
+            System.Diagnostics.Debug.WriteLine($"[SettingsService] Ставка 'Не дубль' сохранена: {enabled}");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[SettingsService] Ошибка сохранения настройки 'Не дубль': {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Загружает настройку включения ставки "Не дубль"
+    /// </summary>
+    public static bool LoadEnableNoDoubleBet()
+    {
+        try
+        {
+            var settings = LoadSettings();
+            System.Diagnostics.Debug.WriteLine($"[SettingsService] Ставка 'Не дубль' загружена: {settings.EnableNoDoubleBet}");
+            return settings.EnableNoDoubleBet;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[SettingsService] Ошибка загрузки настройки 'Не дубль': {ex.Message}");
+        }
+        return true; // По умолчанию включено
     }
 }
