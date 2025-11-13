@@ -58,6 +58,16 @@ public class MelBetGameState
     public int LadderStaysRemaining { get; set; } = 0;
     
     /// <summary>
+    /// Количество ходов на текущем цвете (для стратегии Ladder)
+    /// </summary>
+    public int LadderMovesOnCurrentColor { get; set; } = 0;
+    
+    /// <summary>
+    /// Текущая позиция в цикле 1→2→3 (для стратегии Ladder)
+    /// </summary>
+    public int LadderCyclePosition { get; set; } = 1;
+    
+    /// <summary>
     /// Была ли размещена ставка "Не дубль"
     /// </summary>
     public bool WasNoDoubleBetPlaced { get; set; } = false;
@@ -153,11 +163,21 @@ public class MelBetGameState
         else if (settings.Strategy == BetStrategy.Ladder)
         {
             // Стратегия "Лесенка"
-            // Удваиваем ставку после каждого проигрыша
-            CurrentBet = CurrentBet * 2;
-            LadderLevel++;
+            // Фиксированная последовательность до 14-го хода, затем удвоение
+            int[] betSequence = { 10, 20, 40, 80, 160, 320, 640, 1280, 2560, 5120, 10240, 20480, 40960, 81000 };
             
-            System.Diagnostics.Debug.WriteLine($"[MelBetGameState] 🪜 Лесенка: проигрыш #{ConsecutiveLosses}, ставка удвоена до {CurrentBet}, уровень {LadderLevel}");
+            if (LadderLevel < betSequence.Length)
+            {
+                CurrentBet = betSequence[LadderLevel];
+            }
+            else
+            {
+                // После 14-го хода продолжаем удваивать от 81000
+                CurrentBet = CurrentBet * 2;
+            }
+            
+            LadderLevel++;
+            System.Diagnostics.Debug.WriteLine($"[MelBetGameState] 🪜 Лесенка: проигрыш #{ConsecutiveLosses}, ставка = {CurrentBet}, уровень {LadderLevel}");
         }
         else
         {
@@ -212,34 +232,30 @@ public class MelBetGameState
             // Проверяем, нужно ли менять цвет
             if (settings.Strategy == BetStrategy.Ladder)
             {
-                // Для Лесенки: сложная последовательность смены цвета
-                // Правило: проигрыши 1,3,7,9,11... → смена цвета
-                //          проигрыши 2,4,5,6,8,10... → остаемся
-                // Исключение: проигрыши 4,5,6 всегда остаемся на одном цвете
+                // Для Лесенки: смена цвета по циклу 1→2→3 ходов на одном цвете
+                // Паттерн: 1 ход → смена, 2 хода → смена, 3 хода → смена, повтор...
+                // Ходы на одном цвете: R¹, B², R³, B¹, R², B³, R¹, B², ...
                 
-                bool shouldSwitch = false;
+                // Определяем, сколько ходов уже сделано на текущем цвете
+                int movesOnCurrentColor = newState.LadderMovesOnCurrentColor + 1;
                 
-                if (newState.ConsecutiveLosses == 4 || newState.ConsecutiveLosses == 5 || newState.ConsecutiveLosses == 6)
-                {
-                    // Проигрыши 4,5,6 - всегда остаемся
-                    shouldSwitch = false;
-                    System.Diagnostics.Debug.WriteLine($"[MelBetGameState] 🪜 Лесенка: проигрыш #{newState.ConsecutiveLosses} (зона 4-6) → остаёмся на {newState.CurrentColor}");
-                }
-                else if (newState.ConsecutiveLosses % 2 == 1)
-                {
-                    // Нечётные проигрыши (кроме зоны 4-6) → меняем
-                    shouldSwitch = true;
-                }
+                // Определяем позицию в цикле (1→2→3)
+                int cyclePosition = ((newState.LadderCyclePosition - 1) % 3) + 1; // 1, 2 или 3
+                
+                bool shouldSwitch = (movesOnCurrentColor >= cyclePosition);
                 
                 if (shouldSwitch)
                 {
                     var oldColor = newState.CurrentColor;
                     newState.CurrentColor = newState.CurrentColor == BetColor.Blue ? BetColor.Red : BetColor.Blue;
-                    System.Diagnostics.Debug.WriteLine($"[MelBetGameState] 🪜 Лесенка: проигрыш #{newState.ConsecutiveLosses} (нечётный) → смена цвета {oldColor} → {newState.CurrentColor}");
+                    newState.LadderMovesOnCurrentColor = 0; // Сброс счётчика ходов на цвете
+                    newState.LadderCyclePosition = (cyclePosition % 3) + 1; // Переход к следующей позиции в цикле
+                    System.Diagnostics.Debug.WriteLine($"[MelBetGameState] 🪜 Лесенка: после {movesOnCurrentColor} хода(ов) на {oldColor} → смена на {newState.CurrentColor}, следующий цикл: {newState.LadderCyclePosition}");
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine($"[MelBetGameState] 🪜 Лесенка: проигрыш #{newState.ConsecutiveLosses} (чётный) → остаёмся на {newState.CurrentColor}");
+                    newState.LadderMovesOnCurrentColor = movesOnCurrentColor;
+                    System.Diagnostics.Debug.WriteLine($"[MelBetGameState] 🪜 Лесенка: ход {movesOnCurrentColor}/{cyclePosition} на {newState.CurrentColor}, остаёмся");
                 }
             }
             else
@@ -289,6 +305,8 @@ public class MelBetGameState
                 newState.CurrentBet = settings.BaseBet;
                 newState.LadderLevel = 0;
                 newState.LadderStaysRemaining = 0;
+                newState.LadderMovesOnCurrentColor = 0;
+                newState.LadderCyclePosition = 1;
                 
                 System.Diagnostics.Debug.WriteLine($"[MelBetGameState] 🔄 После победы: CurrentBet={newState.CurrentBet}, LadderLevel={newState.LadderLevel}");
             }
